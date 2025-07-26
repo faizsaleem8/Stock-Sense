@@ -1,0 +1,8 @@
+Flask
+flask-cors
+supabase
+scikit-learn
+pandas
+numpy
+joblib 
+os

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Inventory Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-brand">
+                <h2>Smart Inventory</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><button class="nav-item active" data-section="dashboard">Dashboard</button></li>
+                <li><button class="nav-item" data-section="inventory">Inventory</button></li>
+                <li><button class="nav-item" data-section="sales">Sales</button></li>
+                <li><button class="nav-item" data-section="recommendations">AI Recommendations</button></li>
+                <li><button class="nav-item" data-section="reports">Reports</button></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h1>Dashboard</h1>
+                    <p class="section-subtitle">Overview of your inventory status</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-content">
+                            <h3 id="total-items">0</h3>
+                            <p>Total Items</p>
+                        </div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-content">
+                            <h3 id="low-stock-items">0</h3>
+                            <p>Low Stock Alert</p>
+                        </div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-content">
+                            <h3 id="total-value">₹0</h3>
+                            <p>Total Inventory Value</p>
+                        </div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <h3 id="total-sales">0</h3>
+                            <p>Recent Sales</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Recent Activity</h3>
+                        </div>
+                        <div class="card__body">
+                            <div id="recent-activity">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Section -->
+            <section id="inventory" class="section">
+                <div class="section-header">
+                    <h1>Inventory Management</h1>
+                    <button class="btn btn--primary" id="add-item-btn">Add New Item</button>
+                </div>
+                
+                <div class="inventory-controls">
+                    <input type="text" class="form-control search-input" id="inventory-search" placeholder="Search inventory...">
+                    <select class="form-control" id="category-filter">
+                        <option value="">All Categories</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Office Supplies">Office Supplies</option>
+                    </select>
+                </div>
+
+                <div class="inventory-grid" id="inventory-grid">
+                    <!-- Dynamic inventory items -->
+                </div>
+            </section>
+
+            <!-- Sales Section -->
+            <section id="sales" class="section">
+                <div class="section-header">
+                    <h1>Sales & Checkout</h1>
+                    <button class="btn btn--primary" id="new-sale-btn">Record Sale</button>
+                </div>
+                
+                <div class="sales-history">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Recent Sales</h3>
+                        </div>
+                        <div class="card__body">
+                            <div class="table-container">
+                                <table class="sales-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Customer</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sales-table-body">
+                                        <!-- Dynamic sales data -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Recommendations Section -->
+            <section id="recommendations" class="section">
+                <div class="section-header">
+                    <h1>AI Purchase Recommendations</h1>
+                    <button class="btn btn--secondary" id="refresh-recommendations">Refresh Analysis</button>
+                </div>
+                
+                <div class="recommendations-container" id="recommendations-container">
+                    <!-- Dynamic AI recommendations -->
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="section">
+                <div class="section-header">
+                    <h1>Reports & Analytics</h1>
+                </div>
+                
+                <div class="reports-grid">
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Top Selling Products</h3>
+                        </div>
+                        <div class="card__body">
+                            <div id="top-products-list">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card__header">
+                            <h3>Low Stock Items</h3>
+                        </div>
+                        <div class="card__body">
+                            <div id="low-stock-list">
+                                <!-- Dynamic content -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Add/Edit Item -->
+    <div class="modal hidden" id="item-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Item</h3>
+                <button class="modal-close" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="item-form">
+                    <div class="form-group">
+                        <label class="form-label" for="item-name">Product Name</label>
+                        <input type="text" class="form-control" id="item-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="item-sku">SKU/ID</label>
+                        <input type="text" class="form-control" id="item-sku" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="item-category">Category</label>
+                        <select class="form-control" id="item-category" required>
+                            <option value="">Select Category</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Office Supplies">Office Supplies</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="item-stock">Current Stock</label>
+                            <input type="number" class="form-control" id="item-stock" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="item-min-stock">Minimum Stock</label>
+                            <input type="number" class="form-control" id="item-min-stock" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="item-price">Unit Price (₹)</label>
+                        <input type="number" class="form-control" id="item-price" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="item-supplier">Supplier</label>
+                        <input type="text" class="form-control" id="item-supplier" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="item-description">Description</label>
+                        <textarea class="form-control" id="item-description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" id="cancel-item">Cancel</button>
+                <button type="submit" class="btn btn--primary" id="save-item">Save Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Sale -->
+    <div class="modal hidden" id="sale-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Record Sale</h3>
+                <button class="modal-close" id="close-sale-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="sale-form">
+                    <div class="form-group">
+                        <label class="form-label" for="sale-product">Product</label>
+                        <select class="form-control" id="sale-product" required>
+                            <option value="">Select Product</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="sale-quantity">Quantity</label>
+                            <input type="number" class="form-control" id="sale-quantity" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sale-price">Sale Price (₹)</label>
+                            <input type="number" class="form-control" id="sale-price" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="sale-customer">Customer (Optional)</label>
+                        <input type="text" class="form-control" id="sale-customer">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" id="cancel-sale">Cancel</button>
+                <button type="submit" class="btn btn--primary" id="save-sale">Record Sale</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast hidden" id="toast">
+        <div class="toast-content">
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
