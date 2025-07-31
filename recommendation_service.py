@@ -106,19 +106,11 @@ def train_model():
         # Get inventory and sales data
         inventory_response = supabase.table('inventory').select('*').execute()
         sales_response = supabase.table('sales').select('*').execute()
-        
         inventory = inventory_response.data
         sales = sales_response.data
-        
         print(f"Training model with {len(sales)} sales records and {len(inventory)} inventory items")
-        
-        # Try regular training first
+        # Only call the revised train_model:
         success = ml_model.train_model(sales, inventory)
-        
-        if not success:
-            print("Regular training failed, trying simple training method...")
-            success = ml_model.train_model_simple(sales, inventory)
-        
         if success:
             return jsonify({
                 'message': 'Model trained successfully',
@@ -126,7 +118,7 @@ def train_model():
                     'is_trained': ml_model.is_trained,
                     'model_type': 'RandomForest',
                     'features_used': 'Historical sales, time features, inventory levels',
-                    'training_method': 'Simple' if not ml_model.is_trained else 'Standard'
+                    'training_method': 'Unified'
                 }
             })
         else:
@@ -135,15 +127,16 @@ def train_model():
                 'details': {
                     'sales_count': len(sales),
                     'inventory_count': len(inventory),
-                    'requirements': 'Need at least 5 training samples from sales data spanning multiple days'
+                    'requirements': 'Need at least 3 training samples from sales data spanning multiple days'
                 }
             }), 400
-            
+
     except Exception as e:
         print(f"Error in train_model endpoint: {e}")
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+
 
 @app.route('/model-status', methods=['GET', 'OPTIONS'])
 def get_model_status():
